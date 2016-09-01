@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>消除qq表情游戏</title>
+<style type="text/css">
+*{margin:0;padding:0;}
+#head{width: 900px;height: 200px;margin: 30px auto;text-align: center;}
+h2{height: 80px;font-size: 30px;font-weight: bold;}
+#head p{font-size: 18px;font-weight: bold;}
+input{margin:20px;}
+#left{float: left;width: 100px;height: 100px;}
+#left p{margin-top: 10px;}
+#qq{float: left;width: 700px;height:400px;border:1px solid #000;margin-left: 30px;position: relative;}
+</style>
+<script src="miaov1.js"></script>
+<script type="text/javascript">
+window.onload=function() 
+{
+	var aInp=document.getElementsByTagName('input')[0];
+	var oQQ=document.getElementById('qq');
+	var aScore=document.getElementsByTagName('span');
+	var oBox=document.getElementById('content');
+	var dropSpeed=1;
+	var arr=['img/1.png','img/2.png','img/3.png','img/4.png','img/5.png','img/6.png','img/7.png','img/8.png','img/9.png','img/10.png','img/11.png'];
+	var score1=score2=0;
+	aInp.onclick=function()
+	{
+		this.value='游戏进行中...';
+		this.style.color='#808080';
+		this.style.background='#fff';
+		this.style.opacity='0.5';
+		this.disabled='disabled';
+		fnQQ();
+	}
+
+
+	function fnQQ()
+	{
+		qqCreate();
+		qqDrop(fnQQ);
+	}
+	function qqCreate()
+	{
+		oQQ.innerHTML='<img style="position:absolute;top:0;left:'+Math.round(Math.random()*676)+'px" src="'+arr[Math.round(Math.random()*(arr.length-1))]+'"/>';
+	}
+	function qqDrop(endFn)
+	{
+		var icon=oQQ.getElementsByTagName('img')[0];
+		dropSpeed+=0.8;
+		doMove(icon,'top',dropSpeed,426,function()
+		{
+			oQQ.innerHTML='';
+			score2++;
+			aScore[1].innerHTML=score2+'分';
+			shake(oBox,'top',function()
+			{
+				if(checkScore())
+				{
+					return;
+				}
+				endFn&&endFn();
+			})
+
+		})
+		icon.onmouseover=function()
+		{
+			clearInterval(icon.timer);
+			icon.src='img/qq.png';
+			shake(icon,'left',function()
+			{
+				oQQ.innerHTML='';
+				score1++;
+				aScore[0].innerHTML=score1 + ' 分';
+				if(checkScore())
+				{
+					return;
+				}
+				endFn&&endFn();
+
+			})
+		}
+
+	}
+
+	function checkScore()
+	{
+		if(score1==25)
+		{
+			alert('真厉害！你已经通过了考验！');
+			return true;
+		}
+		if(score2==5)
+		{
+			alert('真遗憾……你的鼠标太慢啦！');
+			return true;
+		}
+	}
+
+
+}
+</script>
+</head>
+<body>
+<div id="head">
+	<h2>你的鼠标有多快?</h2>
+	<p>游戏说明：点击“开始游戏”，随机掉下QQ表情，把鼠标划上去，千万别让它掉下去！！
+划掉25个算你赢；掉下5个算你输 :)</p>
+	<input type="button" value="开始游戏">
+<div id="content">
+	<div id="left">
+		<p>得分：<span>0</span></p>
+		<p>失分：<span>0</span></p>
+	</div>
+	<div id="qq"></div>
+</div>
+</div>
+</body>
+</html>
